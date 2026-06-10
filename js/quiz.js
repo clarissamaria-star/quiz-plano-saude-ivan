@@ -266,9 +266,9 @@ function showLoading() {
     i++;
     if (pct >= 100) {
       clearInterval(interval);
-      setTimeout(() => showScreen("screen-capture"), 600);
+      setTimeout(() => showScreen("screen-capture"), 300);
     }
-  }, 700);
+  }, 400);
 }
 
 // ===== CAPTURA =====

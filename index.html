@@ -83,12 +83,27 @@
   <!-- ===== TELA: CARREGAMENTO ===== -->
   <div id="screen-loading" class="screen">
     <div class="container center">
-      <div class="loading-icon">🔍</div>
+      <div class="loading-icon" id="loading-icon">🔍</div>
       <h2 id="loading-text">Analisando seu perfil...</h2>
-      <p>Identificando as melhores oportunidades para você</p>
+      <p id="loading-sub">Identificando as melhores oportunidades para você</p>
       <div class="loading-bar-wrapper">
         <div class="loading-bar" id="loading-bar"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- ===== TELA: RESULTADO FINAL DIRETO ===== -->
+  <div id="screen-final" class="screen">
+    <div class="container">
+      <div class="final-icon" id="final-icon">🎯</div>
+      <div class="final-badge" id="final-badge"></div>
+      <h2 id="final-title"></h2>
+      <p class="final-sub" id="final-sub"></p>
+      <div class="final-points" id="final-points"></div>
+      <button class="btn-whatsapp-final" onclick="openWhatsApp()">
+        💬 Falar com Ivan agora
+      </button>
+      <p class="final-disclaimer" id="final-disclaimer"></p>
     </div>
   </div>
 

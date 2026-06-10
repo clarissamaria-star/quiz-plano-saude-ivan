@@ -251,49 +251,34 @@ function prevQuestion() {
 // ===== LOADING =====
 function showLoading() {
   showScreen("screen-loading");
-  const messages = [
-    "Analisando seu perfil...",
-    "Identificando oportunidades...",
-    "Calculando potencial de economia...",
-    "Preparando seu diagnóstico..."
+
+  const steps = [
+    { icon: "🔍", text: "Analisando suas respostas...",       sub: "Verificando seu perfil" },
+    { icon: "💡", text: "Identificando oportunidades...",     sub: "Comparando planos disponíveis" },
+    { icon: "📊", text: "Calculando sua economia...",          sub: "Quase pronto!" },
+    { icon: "✅", text: "Diagnóstico concluído!",              sub: "Preparando seus resultados..." }
   ];
+
   let i = 0;
   let pct = 0;
-  const bar = document.getElementById("loading-bar");
+  const bar  = document.getElementById("loading-bar");
   const text = document.getElementById("loading-text");
+  const sub  = document.getElementById("loading-sub");
+  const icon = document.getElementById("loading-icon");
 
   const interval = setInterval(() => {
+    const s = steps[i] || steps[steps.length - 1];
     pct += 25;
     bar.style.width = pct + "%";
-    text.textContent = messages[i] || messages[messages.length - 1];
+    icon.textContent = s.icon;
+    text.textContent = s.text;
+    sub.textContent  = s.sub;
     i++;
     if (pct >= 100) {
       clearInterval(interval);
-      setTimeout(() => showScreen("screen-capture"), 300);
+      setTimeout(() => showFinal(), 400);
     }
   }, 400);
-}
-
-// ===== CAPTURA =====
-function submitCapture(e) {
-  e.preventDefault();
-  leadData = {
-    nome: document.getElementById("input-name").value.trim(),
-    whatsapp: document.getElementById("input-whatsapp").value.trim(),
-    email: document.getElementById("input-email").value.trim(),
-    score: totalScore,
-    classificacao: getClassification(),
-    respostas: { ...answers },
-    tipo_plano: answers.tipo_plano || "",
-    orcamento: answers.orcamento || "",
-    urgencia: answers.urgencia || "",
-    principal_dor: answers.principal_dor || "",
-    regiao: answers.regiao || "",
-    timestamp: new Date().toISOString()
-  };
-
-  sendToCRM(leadData);
-  showResult();
 }
 
 // ===== CLASSIFICAÇÃO =====
@@ -304,10 +289,89 @@ function getClassification() {
   return "frio";
 }
 
-function showResult() {
+// ===== TELA FINAL (sem formulário) =====
+function showFinal() {
   const cls = getClassification();
-  leadData.classificacao = cls;
-  showScreen(`screen-result-${cls}`);
+
+  const configs = {
+    frio: {
+      icon: "📋",
+      badgeClass: "badge-frio",
+      badgeText: "Diagnóstico pronto",
+      title: "Você está dando o passo certo!",
+      sub: "Encontramos opções que podem se encaixar muito bem no seu perfil. Converse com Ivan e descubra sem compromisso.",
+      points: [
+        "✅ Planos disponíveis para a sua região",
+        "✅ Consultoria 100% gratuita",
+        "✅ Ivan responde em até 24h"
+      ],
+      disclaimer: "Sem compromisso. Ivan explica tudo com calma."
+    },
+    morno: {
+      icon: "🔥",
+      badgeClass: "badge-morno",
+      badgeText: "Oportunidade identificada",
+      title: "Você pode estar pagando mais do que deveria!",
+      sub: "Com base nas suas respostas, existe uma chance real de encontrar um plano melhor pelo mesmo preço ou menos.",
+      points: [
+        "⚠️ Possível desalinhamento entre cobertura e valor",
+        "✅ Existem opções melhores para o seu perfil",
+        "💰 Ivan faz a comparação gratuitamente para você"
+      ],
+      disclaimer: "Ivan atende em até 12h úteis."
+    },
+    quente: {
+      icon: "🚨",
+      badgeClass: "badge-quente",
+      badgeText: "Atenção: ação recomendada",
+      title: "Você está pagando caro por menos do que merece!",
+      sub: "Seu diagnóstico indica alto potencial de economia. Outros clientes com o mesmo perfil economizaram até R$ 600 por mês.",
+      points: [
+        "🚨 Alto potencial de economia identificado",
+        "🏥 Cobertura atual provavelmente inferior ao ideal",
+        "⚡ Troca pode ser feita em menos de uma semana"
+      ],
+      disclaimer: "Atendimento prioritário — Ivan responde em até 2h."
+    },
+    premium: {
+      icon: "⭐",
+      badgeClass: "badge-premium",
+      badgeText: "Perfil Premium",
+      title: "Você tem acesso a condições exclusivas!",
+      sub: "Seu perfil se enquadra em uma categoria especial. Ivan tem acesso a planos que não aparecem nas comparações comuns.",
+      points: [
+        "⭐ Planos premium com hospitais top do Brasil",
+        "💼 Possível benefício fiscal para o seu perfil",
+        "🤝 Proposta personalizada e exclusiva com Ivan"
+      ],
+      disclaimer: "Atendimento VIP — resposta imediata no horário comercial."
+    }
+  };
+
+  const c = configs[cls];
+
+  document.getElementById("final-icon").textContent       = c.icon;
+  document.getElementById("final-badge").textContent      = c.badgeText;
+  document.getElementById("final-badge").className        = `final-badge ${c.badgeClass}`;
+  document.getElementById("final-title").textContent      = c.title;
+  document.getElementById("final-sub").textContent        = c.sub;
+  document.getElementById("final-disclaimer").textContent = c.disclaimer;
+  document.getElementById("final-points").innerHTML       = c.points.map(p => `<p>${p}</p>`).join("");
+
+  leadData = {
+    score: totalScore,
+    classificacao: cls,
+    respostas: { ...answers },
+    tipo_plano: answers.tipo_plano || "",
+    orcamento: answers.orcamento || "",
+    urgencia: answers.urgencia || "",
+    principal_dor: answers.principal_dor || "",
+    regiao: answers.regiao || "",
+    timestamp: new Date().toISOString()
+  };
+
+  sendToCRM(leadData);
+  showScreen("screen-final");
 }
 
 // ===== CRM / WEBHOOK =====
@@ -342,14 +406,14 @@ function sendToCRM(data) {
 }
 
 // ===== WHATSAPP =====
-function openWhatsApp(tipo) {
-  const nome = leadData.nome || "novo lead";
+function openWhatsApp() {
+  const cls = leadData.classificacao || "frio";
   const msgs = {
-    frio: `Olá Ivan! Acabei de fazer o diagnóstico do quiz e gostaria de receber uma comparação gratuita de planos. Meu nome é ${nome}.`,
-    morno: `Olá Ivan! Fiz o diagnóstico e parece que posso estar pagando mais do que deveria. Quero a análise comparativa gratuita. Meu nome é ${nome}.`,
-    quente: `Olá Ivan! Acabei de fazer o diagnóstico e identifiquei que tenho uma oportunidade urgente de trocar de plano. Quero minha análise prioritária. Meu nome é ${nome}.`,
-    premium: `Olá Ivan! Meu diagnóstico identificou que tenho perfil premium. Gostaria de uma proposta exclusiva. Meu nome é ${nome}.`
+    frio:    "Olá Ivan! Fiz o diagnóstico do quiz e gostaria de receber uma comparação gratuita de planos.",
+    morno:   "Olá Ivan! Fiz o diagnóstico e parece que posso estar pagando mais do que deveria. Quero a análise comparativa gratuita!",
+    quente:  "Olá Ivan! Fiz o diagnóstico e identifiquei que tenho uma oportunidade urgente de trocar de plano. Quero minha análise prioritária!",
+    premium: "Olá Ivan! Meu diagnóstico identificou perfil premium. Gostaria de uma proposta exclusiva!"
   };
-  const msg = encodeURIComponent(msgs[tipo] || msgs.frio);
+  const msg = encodeURIComponent(msgs[cls] || msgs.frio);
   window.open(`https://wa.me/${IVAN_WHATSAPP}?text=${msg}`, "_blank");
 }

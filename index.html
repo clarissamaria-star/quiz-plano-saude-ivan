@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagnóstico Gratuito de Plano de Saúde | Ivan</title>
+  <meta name="description" content="Descubra em 2 minutos se você está pagando mais do que deveria no seu plano de saúde." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== TELA 0: PÁGINA INICIAL ===== -->
+  <div id="screen-home" class="screen active">
+    <div class="container">
+      <div class="badge">✅ Análise 100% Gratuita</div>
+
+      <h1 class="headline">
+        Descubra em <span class="highlight">2 minutos</span> se você está<br />
+        pagando mais do que deveria<br />
+        no seu plano de saúde
+      </h1>
+
+      <p class="subheadline">
+        Responda algumas perguntas rápidas e receba um diagnóstico personalizado.<br />
+        Sem compromisso. Sem enrolação.
+      </p>
+
+      <div class="benefits">
+        <div class="benefit-item">✅ Descubra se existe um plano melhor para o seu perfil</div>
+        <div class="benefit-item">✅ Veja se você está pagando reajuste abusivo</div>
+        <div class="benefit-item">✅ Encontre opções com mais cobertura e menor custo</div>
+        <div class="benefit-item">✅ Receba uma análise feita por um especialista</div>
+      </div>
+
+      <button class="btn-primary" onclick="startQuiz()">
+        Quero fazer minha análise gratuita →
+      </button>
+
+      <p class="time-info">⏱ Leva menos de 2 minutos</p>
+
+      <div class="social-proof">
+        <div class="proof-avatars">
+          <img src="https://i.pravatar.cc/40?img=1" alt="pessoa" />
+          <img src="https://i.pravatar.cc/40?img=2" alt="pessoa" />
+          <img src="https://i.pravatar.cc/40?img=3" alt="pessoa" />
+          <img src="https://i.pravatar.cc/40?img=4" alt="pessoa" />
+          <img src="https://i.pravatar.cc/40?img=5" alt="pessoa" />
+        </div>
+        <p><strong>+1.200 pessoas</strong> já descobriram como economizar no plano de saúde</p>
+      </div>
+
+      <div class="testimonials">
+        <div class="testimonial">
+          <p>"Não sabia que tinha direito a um plano muito melhor pelo mesmo preço. Ivan me ajudou demais!"</p>
+          <span>— Maria S., 52 anos, São Paulo</span>
+        </div>
+        <div class="testimonial">
+          <p>"Fiz o diagnóstico e descobri que estava pagando R$ 280 a mais por mês. Mudei na mesma semana."</p>
+          <span>— Carlos R., 48 anos, Campinas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TELA 1-15: PERGUNTAS ===== -->
+  <div id="screen-quiz" class="screen">
+    <div class="container">
+      <div class="progress-bar-wrapper">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <p class="progress-text" id="progress-text">Pergunta 1 de 12</p>
+
+      <div id="question-area"></div>
+
+      <div class="nav-buttons">
+        <button class="btn-secondary" id="btn-back" onclick="prevQuestion()" style="display:none">← Voltar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TELA: CARREGAMENTO ===== -->
+  <div id="screen-loading" class="screen">
+    <div class="container center">
+      <div class="loading-icon">🔍</div>
+      <h2 id="loading-text">Analisando seu perfil...</h2>
+      <p>Identificando as melhores oportunidades para você</p>
+      <div class="loading-bar-wrapper">
+        <div class="loading-bar" id="loading-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TELA: CAPTURA ===== -->
+  <div id="screen-capture" class="screen">
+    <div class="container">
+      <div class="capture-icon">🎯</div>
+      <h2>Seu diagnóstico está pronto!</h2>
+      <p class="capture-sub">
+        Identificamos <strong>oportunidades reais</strong> para o seu perfil.<br />
+        Para liberar seu resultado, preencha os dados abaixo:
+      </p>
+
+      <form id="capture-form" onsubmit="submitCapture(event)">
+        <div class="form-group">
+          <label>Qual é o seu nome?</label>
+          <input type="text" id="input-name" placeholder="Seu nome completo" required />
+        </div>
+        <div class="form-group">
+          <label>Seu WhatsApp (com DDD)</label>
+          <input type="tel" id="input-whatsapp" placeholder="(11) 99999-9999" required />
+        </div>
+        <div class="form-group">
+          <label>Seu melhor e-mail</label>
+          <input type="email" id="input-email" placeholder="seuemail@email.com" required />
+        </div>
+
+        <p class="privacy-note">🔒 Seus dados estão seguros. Não enviamos spam.</p>
+
+        <button type="submit" class="btn-primary">Ver meu diagnóstico gratuito →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== TELAS DE RESULTADO ===== -->
+
+  <!-- Resultado 1: Frio -->
+  <div id="screen-result-frio" class="screen result-screen result-frio">
+    <div class="container">
+      <div class="result-badge frio-badge">📋 Perfil Identificado</div>
+      <h2>Você está no caminho certo!</h2>
+      <div class="result-box">
+        <h3>Diagnóstico do seu perfil:</h3>
+        <p>Você ainda está na fase de pesquisa, o que é muito inteligente! Quem pesquisa antes de contratar sempre toma decisões melhores.</p>
+        <h3>O que identificamos:</h3>
+        <ul>
+          <li>✅ Você tem interesse em ter um plano de saúde de qualidade</li>
+          <li>✅ Ainda está comparando opções do mercado</li>
+          <li>✅ Existe um plano adequado ao seu perfil e orçamento</li>
+        </ul>
+        <h3>Próximo passo:</h3>
+        <p>Ivan pode te enviar gratuitamente uma comparação dos melhores planos disponíveis na sua região, sem compromisso.</p>
+      </div>
+      <button class="btn-whatsapp" onclick="openWhatsApp('frio')">
+        💬 Quero receber a comparação gratuita
+      </button>
+      <p class="result-disclaimer">Ivan responde em até 24h úteis.</p>
+    </div>
+  </div>
+
+  <!-- Resultado 2: Morno -->
+  <div id="screen-result-morno" class="screen result-screen result-morno">
+    <div class="container">
+      <div class="result-badge morno-badge">🔥 Oportunidade Identificada</div>
+      <h2>Encontramos oportunidades para o seu perfil!</h2>
+      <div class="result-box">
+        <h3>Diagnóstico do seu perfil:</h3>
+        <p>Com base nas suas respostas, identificamos que você pode estar pagando mais do que deveria ou utilizando um plano que não atende todas as suas necessidades.</p>
+        <h3>O que identificamos:</h3>
+        <ul>
+          <li>⚠️ Possível desalinhamento entre cobertura e valor pago</li>
+          <li>⚠️ Reajuste acima da média do mercado</li>
+          <li>✅ Existem opções melhores disponíveis para o seu perfil</li>
+          <li>✅ É possível ter mais cobertura pagando o mesmo ou menos</li>
+        </ul>
+        <h3>Próximo passo:</h3>
+        <p>Ivan pode fazer uma análise comparativa gratuita e mostrar quanto você pode economizar.</p>
+      </div>
+      <button class="btn-whatsapp" onclick="openWhatsApp('morno')">
+        💬 Quero a análise comparativa gratuita
+      </button>
+      <p class="result-disclaimer">Ivan atende em até 12h úteis.</p>
+    </div>
+  </div>
+
+  <!-- Resultado 3: Quente -->
+  <div id="screen-result-quente" class="screen result-screen result-quente">
+    <div class="container">
+      <div class="result-badge quente-badge">🚨 Atenção: Você pode estar perdendo dinheiro!</div>
+      <h2>Seu diagnóstico revela uma oportunidade urgente</h2>
+      <div class="result-box">
+        <h3>Diagnóstico do seu perfil:</h3>
+        <p>As suas respostas indicam claramente que você está pagando caro por um plano que não entrega o que promete. Isso é mais comum do que parece — e tem solução.</p>
+        <h3>O que identificamos:</h3>
+        <ul>
+          <li>🚨 Alto potencial de economia mensal</li>
+          <li>🚨 Cobertura atual provavelmente inferior ao que você precisa</li>
+          <li>✅ Existem planos com muito mais benefícios no seu orçamento</li>
+          <li>✅ A migração pode ser feita sem carência na maioria dos casos</li>
+        </ul>
+        <h3>Próximo passo:</h3>
+        <p>Ivan já atendeu dezenas de pessoas com o seu perfil e conseguiu economias de R$ 200 a R$ 800 por mês. Fale agora para garantir sua análise prioritária.</p>
+      </div>
+      <button class="btn-whatsapp" onclick="openWhatsApp('quente')">
+        💬 Quero minha análise prioritária agora!
+      </button>
+      <p class="result-disclaimer">Atendimento prioritário — Ivan responde em até 2h.</p>
+    </div>
+  </div>
+
+  <!-- Resultado 4: Premium -->
+  <div id="screen-result-premium" class="screen result-screen result-premium">
+    <div class="container">
+      <div class="result-badge premium-badge">⭐ PERFIL PREMIUM IDENTIFICADO</div>
+      <h2>Você merece o melhor plano do mercado</h2>
+      <div class="result-box">
+        <h3>Diagnóstico do seu perfil:</h3>
+        <p>Seu perfil se enquadra em uma categoria especial de clientes que têm acesso a planos premium com condições exclusivas. Ivan trabalha com as melhores operadoras do Brasil e pode oferecer algo que você não encontra comparando sozinho.</p>
+        <h3>O que identificamos:</h3>
+        <ul>
+          <li>⭐ Perfil apto para planos premium e empresariais</li>
+          <li>⭐ Alta possibilidade de condições negociadas exclusivas</li>
+          <li>✅ Cobertura nacional com acesso aos melhores hospitais</li>
+          <li>✅ Possibilidade de benefício fiscal para empresários</li>
+          <li>✅ Atendimento VIP e consultoria personalizada</li>
+        </ul>
+        <h3>Próximo passo:</h3>
+        <p>Por ser um perfil premium, Ivan reservará um horário exclusivo para montar uma proposta sob medida para você.</p>
+      </div>
+      <button class="btn-whatsapp" onclick="openWhatsApp('premium')">
+        💬 Quero minha proposta exclusiva com Ivan
+      </button>
+      <p class="result-disclaimer">⭐ Atendimento VIP — resposta imediata durante horário comercial.</p>
+    </div>
+  </div>
+
+  <script src="js/quiz.js"></script>
+</body>
+</html>

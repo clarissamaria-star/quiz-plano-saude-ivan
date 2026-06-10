@@ -259,11 +259,17 @@ body {
 
 /* ===== LOADING ===== */
 #screen-loading {
+  display: none;
   min-height: 100vh;
 }
 #screen-loading.active {
   display: flex !important;
   align-items: center;
+}
+
+/* ===== TELA FINAL ===== */
+#screen-final {
+  display: none;
 }
 #screen-loading .container {
   width: 100%;
